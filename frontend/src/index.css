@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-textGray: #637381;
+  --color-text-gray: #828282;
+  --color-black-text: #4f4f4f;
+  --color-orange: #ff5a2f;
+  --color-orange-dark: #e04e29;
+  --color-borderGray300: #f0f0f0;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-smokeGray: #c2c2c2;
+  --color-red: #ef4444;
+  --color-baground: #fbfbfb;
+}
