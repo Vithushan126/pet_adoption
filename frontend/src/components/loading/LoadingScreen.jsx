@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoadingScreen = () => {
+const LoadingScreen = React.memo(() => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="relative w-16 h-16 ">
@@ -28,6 +28,6 @@ const LoadingScreen = () => {
       </p>
     </div>
   );
-};
+});
 
 export default LoadingScreen;

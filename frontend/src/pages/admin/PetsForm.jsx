@@ -35,7 +35,7 @@ const PetsForm = ({ isOpen, onClose, onSubmit, initialData }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 p-2">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[95vh] overflow-y-scroll">
         <div className="p-4 flex flex-col space-y-4">
           <div className="flex justify-between items-center">
@@ -61,7 +61,7 @@ const PetsForm = ({ isOpen, onClose, onSubmit, initialData }) => {
             }}
           >
             {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-              <Form className="space-y-4">
+              <Form className="space-y-4 ">
                 {/* Pets Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -196,7 +196,7 @@ const PetsForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="rounded-md disabled:opacity-50"
+                    className="rounded-md disabled:opacity-50 text-nowrap"
                   >
                     {isSubmitting
                       ? initialData

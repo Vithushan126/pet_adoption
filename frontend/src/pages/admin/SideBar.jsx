@@ -40,7 +40,7 @@ const SideBar = () => {
             "bg-white rounded-full text-black border-2 border-borderGray300 -mr-0 transform transition-transform duration-200 hover:scale-120",
         })}
       </div>
-      <div className="p-4">
+      <div className="">
         <div className="flex flex-col space-y-2 mt-6">
           {menuItems.map((item) => (
             <div

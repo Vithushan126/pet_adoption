@@ -1,31 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  CalendarPlus,
-  ChartLine,
   Edit,
-  Mail,
-  ShieldCheck,
+  Eye,
+  Trash2,
+  FileText,
   SquarePlus,
   Squirrel,
+  ShieldCheck,
   User,
   Dog,
   CakeSlice,
-  UserRound,
   Smile,
   Heart,
   Home,
   CalendarCheck,
-  FileText,
   MoreVertical,
-  CheckCircle,
-  XCircle,
-  Delete,
-  Trash2,
-  View,
-  Eye,
   BadgeCheck,
   FunnelPlus,
+  XCircle,
 } from "lucide-react";
 import Button from "../../components/button";
 import PetsForm from "./PetsForm";
@@ -34,62 +27,86 @@ import { getMoodColor, getMoodIcon } from "../../utils/moodHelpers";
 import {
   AddPets,
   UpdatePetsById,
-  GetAllPets,
   DeletePetsById,
   FilterPetsByMood,
 } from "../../redux/features/petDetailsSlice";
+import { formatDate } from "../../utils/formatDate";
 
 const moodOptions = ["Happy", "Sad", "Excited"];
+const adopter = {
+  name: "Vairamuththu Vithushan",
+  email: "vairamuththu@example.com",
+};
 
 const PetDetails = () => {
   const dispatch = useDispatch();
-  const moodFilterRef = useRef(null);
-  const { petDetails, loading, error, message } = useSelector(
-    (state) => state.petDetails
-  );
-
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const { petDetails } = useSelector((state) => state.petDetails);
+  const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
-  const [moodFilterOpen, setMoodFilterOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedMoods, setSelectedMoods] = useState([]);
-  console.log("selectedMoods", selectedMoods);
+  const [deletingId, setDeletingId] = useState(null);
+  const filterRef = useRef();
+
+  useEffect(() => {
+    const outsideClick = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setFilterOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", outsideClick);
+    return () => document.removeEventListener("mousedown", outsideClick);
+  }, []);
+
+  useEffect(() => {
+    dispatch(FilterPetsByMood(selectedMoods));
+  }, [selectedMoods]);
+
+  const handleSubmit = async (values) => {
+    const action = editData ? UpdatePetsById : AddPets;
+    await dispatch(action(values));
+    dispatch(FilterPetsByMood(selectedMoods));
+    setEditData(null);
+  };
+
+  const handleDelete = async (id) => {
+    setDeletingId(id);
+    setTimeout(async () => {
+      await dispatch(DeletePetsById(id));
+      dispatch(FilterPetsByMood(selectedMoods));
+      setDeletingId(null);
+    }, 300); // fade-out duration
+  };
 
   const headers = [
-    { icon: <ShieldCheck size={20} />, label: "ID" },
-    { icon: <User size={20} />, label: "Name" },
-    { icon: <Dog size={20} />, label: "Species" },
-    { icon: <CakeSlice size={20} />, label: "Age" },
-    { icon: <Smile size={20} />, label: "Personality" },
+    { icon: <ShieldCheck />, label: "ID" },
+    { icon: <User />, label: "Name" },
+    { icon: <Dog />, label: "Species" },
+    { icon: <CakeSlice />, label: "Age" },
+    { icon: <Smile />, label: "Personality" },
     {
-      icon: <Heart size={20} />,
+      icon: <Heart />,
       label: "Mood",
       filter: (
-        <div className="relative">
+        <div className="relative" ref={filterRef}>
           <FunnelPlus
-            size={16}
-            className="text-gray-500 hover:text-main-color transition-all duration-300 cursor-pointer hover:scale-125"
-            onClick={() => setMoodFilterOpen((prev) => !prev)}
+            onClick={() => setFilterOpen(!filterOpen)}
+            className="cursor-pointer text-gray-500 hover:text-main-color"
           />
-          {moodFilterOpen && (
-            <div
-              ref={moodFilterRef}
-              className="absolute z-50 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg p-2"
-            >
+          {filterOpen && (
+            <div className="absolute mt-2 bg-white border shadow p-2 z-50 rounded w-40">
               {moodOptions.map((mood) => (
-                <label
-                  key={mood}
-                  className="flex items-center space-x-2 p-1 cursor-pointer"
-                >
+                <label key={mood} className="flex items-center space-x-2 p-1">
                   <input
                     type="checkbox"
                     checked={selectedMoods.includes(mood)}
-                    onChange={() => {
+                    onChange={() =>
                       setSelectedMoods((prev) =>
                         prev.includes(mood)
                           ? prev.filter((m) => m !== mood)
                           : [...prev, mood]
-                      );
-                    }}
+                      )
+                    }
                   />
                   <span>{mood}</span>
                 </label>
@@ -99,175 +116,112 @@ const PetDetails = () => {
         </div>
       ),
     },
-    { icon: <Home size={20} />, label: "Adopted" },
-    { icon: <CalendarCheck size={20} />, label: "Adoption Date" },
-    { icon: <FileText size={20} />, label: "PDF" },
-    { icon: <MoreVertical size={20} />, label: "Action" },
+    { icon: <Home />, label: "Adopted" },
+    { icon: <CalendarCheck />, label: "Adoption Date" },
+    { icon: <FileText />, label: "PDF" },
+    { icon: <MoreVertical />, label: "Action" },
   ];
 
-  const adopter = {
-    name: "Vairamuththu Vithushan",
-    email: "vairamuththu@example.com",
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        moodFilterRef.current &&
-        !moodFilterRef.current.contains(event.target)
-      ) {
-        setMoodFilterOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    dispatch(FilterPetsByMood(selectedMoods));
-  }, [selectedMoods]);
-
-  const handleProfileSubmit = async (values) => {
-    if (editData) {
-      try {
-        await dispatch(UpdatePetsById(values));
-        dispatch(FilterPetsByMood(selectedMoods));
-      } catch (error) {
-        console.error("Error updating pets:", error);
-      }
-    } else {
-      try {
-        await dispatch(AddPets(values));
-        dispatch(FilterPetsByMood(selectedMoods));
-      } catch (error) {
-        console.error("Error creating pets:", error);
-      }
-    }
-    setEditData(null);
-  };
-
-  const handleEditClick = (pet) => {
-    setEditData(pet);
-    setIsProfileModalOpen(true);
-  };
-
-  const handleViewClick = (pet) => {
-    setEditData(pet);
-    setIsProfileModalOpen(true);
-  };
-
-  const handleDeleteClick = async (pet) => {
-    try {
-      await dispatch(DeletePetsById(pet._id));
-      dispatch(FilterPetsByMood(selectedMoods));
-    } catch (error) {
-      console.error("Failed to delete pet:", error);
-    }
-  };
-
   return (
-    <div className="rounded-2xl shadow-sm p-4 flex flex-col w-full space-y-4 h-full">
-      <div className="flex justify-between ">
-        <div className="flex space-x-4">
+    <div className="rounded-2xl shadow-sm p-4 space-y-4 w-full">
+      <div className="flex justify-between">
+        <div className="flex items-center gap-2">
           <Squirrel className="text-orange" size={30} />
-          <span className="text-text-black-text font-semibold text-2xl">
+          <h2 className="text-2xl font-semibold text-black-text">
             Pets Details
-          </span>
+          </h2>
         </div>
         <Button
-          className="text-white bg-button-color font-bold border  rounded-md hover:bg-hover-color hover:text-white transition-all duration-300 ease-in-out flex items-center gap-2 text-nowrap w-fit px-2 md:px-16"
-          Visitation
-          onClick={() => setIsProfileModalOpen(true)}
+          onClick={() => setModalOpen(true)}
+          className="bg-button-color text-white px-6 py-2 rounded hover:bg-hover-color flex items-center gap-2"
         >
-          <SquarePlus className="text-white w-4 h-4" />
-          Create Pets
+          <SquarePlus className="w-4 h-4" /> Create Pets
         </Button>
       </div>
 
-      {/* table */}
-      <div className="overflow-x-auto rounded-lg shadow-sm border border-borderGray300 ">
-        <table className="min-w-full min-h-[200px]">
-          <thead>
-            <tr className="text-left text-black-text bg-gradient-to-r from-orange-100 to-pink-100">
+      <div className="overflow-x-auto border border-borderGray300 rounded-lg shadow-sm">
+        <table className="min-w-full text-sm min-h-[200px]">
+          <thead className="bg-gradient-to-r from-orange-100 to-pink-100 text-left ">
+            <tr>
               {headers.map((h, i) => (
-                <th key={i} className="py-3 font-normal">
-                  <div className="flex items-center gap-2 font-semibold text-nowrap">
-                    {h.label}
-                    {h.filter}
+                <th key={i} className="py-3 font-semibold">
+                  <div className="flex items-center gap-2 text-nowrap">
+                    {h.label} {h.filter}
                   </div>
                 </th>
               ))}
-              <th className="py-3 font-normal" />
             </tr>
           </thead>
-
           <tbody>
             {petDetails?.map((pet) => (
-              <tr key={pet?._id} className="border-t border-gray-100 text-sm">
-                <td className="py-3 text-text-gray">{pet?._id}</td>
-                <td className="py-3 font-medium text-black-text">
-                  {pet?.name}
-                </td>
-                <td className="py-3 text-text-gray">{pet?.species}</td>
-                <td className="py-3 text-text-gray text-nowrap">{pet?.age}</td>
-                <td className="py-3 text-text-gray">{pet?.personality}</td>
+              <tr
+                key={pet._id}
+                className={`border-t border-gray-100 transition-opacity duration-300 ${
+                  deletingId === pet._id ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                <td className="py-3">{pet._id}</td>
+                <td className="py-3 font-medium">{pet.name}</td>
+                <td className="py-3">{pet.species}</td>
+                <td className="py-3">{pet.age}</td>
+                <td className="py-3">{pet.personality}</td>
                 <td className="py-3">
                   <span
-                    className={`font-semibold flex items-center gap-2 text-white rounded-2xl p-1 text-nowrap ${getMoodColor(
-                      pet?.mood
+                    className={`flex items-center gap-2 text-nowrap text-white rounded-2xl p-1 ${getMoodColor(
+                      pet.mood
                     )}`}
                   >
-                    {getMoodIcon(pet?.mood)} {pet?.mood}
+                    {getMoodIcon(pet.mood)} {pet.mood}
                   </span>
                 </td>
-
                 <td className="py-3">
                   <div
-                    className={`flex items-center gap-2 px-2 py-1 rounded-full w-fit transition-all duration-500 ease-in-out animate-fade-in text-nowrap ${
-                      pet?.adopted === true
+                    className={`flex items-center gap-2 px-2 py-1 rounded-full w-fit text-sm font-medium text-nowrap
+                    ${
+                      pet.adopted
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
-                    {pet.adopted === true ? (
-                      <BadgeCheck className="w-4 h-4 animate-bounce" />
+                    {pet.adopted ? (
+                      <BadgeCheck className="w-4 h-4" />
                     ) : (
-                      <XCircle className="w-4 h-4 animate-pulse" />
+                      <XCircle className="w-4 h-4" />
                     )}
-                    <span className="text-sm font-medium">
-                      {pet?.adopted === true ? "Adopted" : "Not Adopted"}
-                    </span>
+                    {pet.adopted ? "Adopted" : "Not Adopted"}
                   </div>
                 </td>
-                <td className="py-3 text-text-gray">
-                  {pet?.adoption_date ? pet?.adoption_date : "-"}
+                <td className="py-3 text-nowrap">
+                  {formatDate(pet?.adoption_date) || "-"}
                 </td>
-                <td className="py-3 text-center ">
-                  {pet?.adopted === true ? (
+                <td className="py-3 text-center">
+                  {pet.adopted ? (
                     <FileText
-                      className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors duration-300 group-hover:scale-110 cursor-pointer"
+                      className="text-blue-600 cursor-pointer hover:scale-110 transition-transform"
                       onClick={() => generateAdoptionCertificate(pet, adopter)}
                     />
                   ) : (
-                    <div className="text-gray-400 text-start">-</div>
+                    "-"
                   )}
                 </td>
-
-                <td className="py-3 flex flex-row justify-evenly">
+                <td className="py-3 flex gap-1 md:gap-4 justify-center items-end">
                   <Edit
-                    className="w-5 h-5 text-text-gray inline-block hover:cursor-pointer hover:text-button-color transition-transform duration-200 hover:scale-110"
-                    onClick={() => handleEditClick(pet)}
+                    onClick={() => {
+                      setEditData(pet);
+                      setModalOpen(true);
+                    }}
+                    className="cursor-pointer hover:text-button-color"
                   />
                   <Eye
-                    className="w-5 h-5 text-text-gray inline-block hover:cursor-pointer hover:text-button-color transition-transform duration-200 hover:scale-110"
-                    onClick={() => handleViewClick(pet)}
+                    onClick={() => {
+                      setEditData(pet);
+                      setModalOpen(true);
+                    }}
+                    className="cursor-pointer hover:text-button-color"
                   />
                   <Trash2
-                    className="w-5 h-5 text-red inline-block hover:cursor-pointer hover:text-orange transition-transform duration-200 hover:scale-110"
-                    onClick={() => handleDeleteClick(pet)}
+                    onClick={() => handleDelete(pet._id)}
+                    className="cursor-pointer text-red hover:text-orange"
                   />
                 </td>
               </tr>
@@ -277,12 +231,12 @@ const PetDetails = () => {
       </div>
 
       <PetsForm
-        isOpen={isProfileModalOpen}
+        isOpen={modalOpen}
         onClose={() => {
-          setIsProfileModalOpen(false);
+          setModalOpen(false);
           setEditData(null);
         }}
-        onSubmit={handleProfileSubmit}
+        onSubmit={handleSubmit}
         initialData={editData}
       />
     </div>

@@ -4,7 +4,7 @@ import { ChevronRight, Menu, Search, X, CircleUserRound } from "lucide-react";
 import Logo from "../../assets/logo.png";
 import { headerText } from "../../utils/headerLinks";
 
-const Navbar = () => {
+const Navbar = React.memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef(null);
@@ -174,6 +174,6 @@ const Navbar = () => {
       )}
     </div>
   );
-};
+});
 
 export default Navbar;
