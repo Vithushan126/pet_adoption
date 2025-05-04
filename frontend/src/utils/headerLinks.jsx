@@ -15,6 +15,11 @@ export const headerText = [
     url: "/",
   },
   {
+    text: "Admin",
+    icon: <LayoutDashboard className="h-5 w-5" />,
+    url: "/admin",
+  },
+  {
     text: "Services",
     icon: <BookOpen className="h-5 w-5" />,
     url: "/services",
@@ -38,10 +43,5 @@ export const headerText = [
     text: "Contact",
     icon: <PhoneCall className="h-5 w-5" />,
     url: "/contact",
-  },
-  {
-    text: "Admin",
-    icon: <LayoutDashboard className="h-5 w-5" />,
-    url: "/admin",
   },
 ];

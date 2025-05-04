@@ -34,7 +34,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="w-full  text-text-color py-10 mt-10 relative  bg-cover "
+      className="w-full  text-text-color py-10 mt-20 relative  bg-cover "
       style={{
         backgroundImage: `url(${FooterBaground})`,
         backgroundBlendMode: "overlay",
@@ -201,7 +201,7 @@ const Footer = () => {
 
         {/* Logo */}
         <div
-          className="bg-darkBlue absolute top-1/2 -right-6 transform -translate-y-1/2 w-[120px] h-[71px] bg-contain bg-no-repeat -rotate-90"
+          className=" absolute top-1/2 -right-6 transform -translate-y-1/2 w-[120px] h-[71px] bg-contain bg-no-repeat -rotate-90"
           style={{ backgroundImage: `url(${WhiteLogo})` }}
         ></div>
 
@@ -297,14 +297,14 @@ const Footer = () => {
                   Contact
                 </h3>
                 <p className="text-lightGray font-medium text-sm mt-2 leading-relaxed">
-                  Langstrasse 214, 8005 Zurich
+                  No.15,Vaddakkandal,Mannar.
                 </p>
                 <p>
                   <a
-                    href="mailto:info@efly.ch"
+                    href=" vithushan126@gmail.com"
                     className="text-lightGray font-medium text-sm mt-2 leading-relaxed hover:underline"
                   >
-                    info@efly.ch
+                    vithushan126@gmail.com
                   </a>
                 </p>
                 <p className="text-lightGray font-medium text-sm mt-2 leading-relaxed">

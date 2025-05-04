@@ -81,7 +81,7 @@ const Navbar = React.memo(() => {
           <div className="flex flex-row items-center space-x-12">
             <img
               src={Logo}
-              alt="Efly Logo"
+              alt="Logo"
               className="w-24 h-14 cursor-pointer bg-opacity-100 "
               onClick={() => handleNavigation("/")}
             />
