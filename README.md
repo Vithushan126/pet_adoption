@@ -1,3 +1,4 @@
+
 # 🐾 Virtual Pet Adoption Center
 
 Welcome to the **Virtual Pet Adoption Center**! This is a full-stack web application where users can browse available pets, submit adoption requests, and manage pet listings via an admin dashboard.
@@ -63,7 +64,7 @@ pet-adoption/
 
 ⚙️ Backend Setup
 2. Create Environment File
-Create a config.env file inside pet-adoption/backend/config/
+Create a config.env file inside pet-adoption/backend/config/config.env/
   PORT=8000
   MONGO_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/pet-adoption_db
 Replace <username> and <password>,clustor,create the data base with your actual MongoDB Atlas credentials.
@@ -71,24 +72,28 @@ Make sure your IP is whitelisted and your cluster is accessible.
 
 3. Install Backend Dependencie
   cd backend
-  npm install
+  pet-adoption/backend/
+    npm install
 
 5. Run the Backend Server
-  npm run dev
-  Backend will be running on: http://localhost:8000/api/v1
+  pet-adoption/backend/
+    npm run dev
+    Backend will be running on: http://localhost:8000/api/v1
 
 🎨 Frontend Setup
 5. Create Environment File
-Create a .env file inside pet-adoption/frontend/
+Create a .env file inside pet-adoption/frontend/.env/
   VITE_BASE_URL=http://localhost:8000/api/v1
   
 6. Install Frontend Dependencies
   cd ../frontend
-  npm install
+   pet-adoption/frontend/
+     npm install
 
 8. Run the Frontend
-  npm run dev
-  Frontend will be running at: http://localhost:5173
+   pet-adoption/frontend/
+    npm run dev
+    Frontend will be running at: http://localhost:5173
 
 🌐 API Documentation
 Full API reference is available via Postman:
@@ -99,3 +104,14 @@ Full API reference is available via Postman:
 For questions or contributions:
   GitHub: https://github.com/Vithushan126
   Email: vithushan126@gmail.com
+
+Screenshots & pdf
+------------------
+![Screenshot (156)](https://github.com/user-attachments/assets/a6584a29-548d-4e7f-966a-c7175e1273dd)
+![Screenshot (158)](https://github.com/user-attachments/assets/314a7eb6-8bdd-4275-b787-941f1e712386)
+![Screenshot (154)](https://github.com/user-attachments/assets/9538f8ad-cd8b-474a-8cb6-be39f13f5a1b)
+![Screenshot (153)](https://github.com/user-attachments/assets/69abd388-3da5-4663-a69b-a5aef5e361fc)
+
+sample Adoption Certificate:pdf 
+-------------------------------
+[Buddy-adoption-certificate (11).pdf](https://github.com/user-attachments/files/20028642/Buddy-adoption-certificate.11.pdf)
