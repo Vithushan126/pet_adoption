@@ -13,7 +13,7 @@ function Login() {
       }}
     >
       <div className="flex-grow flex items-center justify-center">
-        <div className="flex flex-row   lg:space-x-48 items-center justify-center ">
+        <div className="flex flex-row lg:space-x-48 items-center justify-center ">
           <img
             src={GirlImage}
             alt="Girl"
