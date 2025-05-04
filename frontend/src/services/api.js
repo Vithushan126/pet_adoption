@@ -26,3 +26,12 @@ export const UpdatePetsById = (petsId, formvalues) => {
 export const DeletePetsById = (petsId) => {
   return APIUser.delete(`pets/${petsId}`);
 };
+
+//filter pets by moods
+export const FilterPetsByMood = (mood) => {
+  console.log("mood", mood);
+
+  return APIUser.get(
+    `/pets/filter?mood=${encodeURIComponent(JSON.stringify(mood))}`
+  );
+};

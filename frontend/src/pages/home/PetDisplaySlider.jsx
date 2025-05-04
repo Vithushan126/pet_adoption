@@ -128,7 +128,7 @@ export default function PetDisplaySlider() {
 
       {/* Gallery Button */}
       <Button className="mt-8 bg-pink-600 text-white px-8 py-3 rounded-full font-medium hover:bg-pink-700 transition">
-        SEE ADOPTION GALLERY
+        SEE ALL PETS
       </Button>
     </div>
   );

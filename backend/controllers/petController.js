@@ -90,12 +90,55 @@ exports.deletePet = async (req, res) => {
 };
 
 // Filter pets by mood
+// exports.filterPetsByMood = async (req, res) => {
+//   try {
+//     const { mood } = req.query;
+
+//     const pets = await petService.getAllPets();
+
+//     const petsWithMood = await updatePetMoods(pets);
+
+//     if (!Array.isArray(petsWithMood)) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Unexpected error: petsWithMood is not an array",
+//       });
+//     }
+
+//     //   const normalizedMood = mood?.toLowerCase();
+
+//     //   const validMoods = {
+//     //     happy: "Happy",
+//     //     excited: "Excited",
+//     //     sad: "Sad",
+//     //   };
+
+//     //   if (!validMoods[normalizedMood]) {
+//     //     return res.status(400).json({ message: "Invalid mood query parameter" });
+//     //   }
+
+//     // const allPets = await petService.getAllPets();
+
+//     // const petsWithMood = updatePetMoods(allPets);
+
+//     const filteredPets = petsWithMood.filter(
+//       (pet) => pet.mood.toLowerCase() === mood.toLowerCase()
+//     );
+
+//     res.status(200).json({ success: true, data: filteredPets });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || "Failed to filter pets",
+//     });
+//   }
+// };
+
 exports.filterPetsByMood = async (req, res) => {
   try {
-    const { mood } = req.query;
+    let { mood } = req.query;
 
     const pets = await petService.getAllPets();
-
     const petsWithMood = await updatePetMoods(pets);
 
     if (!Array.isArray(petsWithMood)) {
@@ -105,24 +148,32 @@ exports.filterPetsByMood = async (req, res) => {
       });
     }
 
-    //   const normalizedMood = mood?.toLowerCase();
+    // If mood is not provided, return all pets
+    if (!mood) {
+      return res.status(200).json({ success: true, data: petsWithMood });
+    }
 
-    //   const validMoods = {
-    //     happy: "Happy",
-    //     excited: "Excited",
-    //     sad: "Sad",
-    //   };
+    let moodArray;
+    try {
+      // Parse JSON-style array (e.g., mood=["Happy","Excited"])
+      moodArray = JSON.parse(mood);
+      if (!Array.isArray(moodArray)) {
+        throw new Error("Mood is not an array");
+      }
+    } catch (err) {
+      return res
+        .status(400)
+        .json({ message: 'Invalid mood format. Use mood=["Happy","Excited"]' });
+    }
 
-    //   if (!validMoods[normalizedMood]) {
-    //     return res.status(400).json({ message: "Invalid mood query parameter" });
-    //   }
+    // If the array is empty, return all pets
+    if (moodArray.length === 0) {
+      return res.status(200).json({ success: true, data: petsWithMood });
+    }
 
-    // const allPets = await petService.getAllPets();
-
-    // const petsWithMood = updatePetMoods(allPets);
-
-    const filteredPets = petsWithMood.filter(
-      (pet) => pet.mood.toLowerCase() === mood.toLowerCase()
+    // Otherwise, filter by mood
+    const filteredPets = petsWithMood.filter((pet) =>
+      moodArray.some((m) => pet.mood.toLowerCase() === m.toLowerCase())
     );
 
     res.status(200).json({ success: true, data: filteredPets });

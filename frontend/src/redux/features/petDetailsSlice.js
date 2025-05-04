@@ -65,6 +65,26 @@ export const DeletePetsById = createAsyncThunk(
   }
 );
 
+// Filter pets by moods
+export const FilterPetsByMood = createAsyncThunk(
+  "FilterPetsByMood",
+  async (mood, { rejectWithValue }) => {
+    console.log("mood", mood);
+
+    try {
+      const response = await API.FilterPetsByMood(mood);
+      console.log("response", response);
+
+      return response;
+    } catch (error) {
+      return rejectWithValue({
+        message: error.response.data.message,
+        detail: error.response.data.error,
+      });
+    }
+  }
+);
+
 const initialState = {
   petDetails: null,
   loading: false,
@@ -147,6 +167,24 @@ const petDetailsSlice = createSlice({
         state.error.message = action.payload.message;
         state.error.detail = action.payload.detail;
         toast.error(action.payload.detail);
+      })
+
+      // Filter pets by moods
+      .addCase(FilterPetsByMood.pending, (state) => {
+        state.loading = true;
+        state.message = null;
+        state.error = { message: null, detail: null };
+      })
+      .addCase(FilterPetsByMood.fulfilled, (state, action) => {
+        state.loading = false;
+        state.petDetails = action.payload.data.data;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(FilterPetsByMood.rejected, (state, action) => {
+        state.loading = false;
+        state.error.message = action.payload.message;
+        state.error.detail = action.payload.detail;
       });
   },
 });

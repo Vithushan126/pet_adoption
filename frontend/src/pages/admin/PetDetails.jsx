@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CalendarPlus,
@@ -24,6 +24,8 @@ import {
   Trash2,
   View,
   Eye,
+  BadgeCheck,
+  FunnelPlus,
 } from "lucide-react";
 import Button from "../../components/button";
 import PetsForm from "./PetsForm";
@@ -34,29 +36,74 @@ import {
   UpdatePetsById,
   GetAllPets,
   DeletePetsById,
+  FilterPetsByMood,
 } from "../../redux/features/petDetailsSlice";
 
-const headers = [
-  { icon: <ShieldCheck size={20} />, label: "ID" },
-  { icon: <User size={20} />, label: "Name" },
-  { icon: <Dog size={20} />, label: "Species" },
-  { icon: <CakeSlice size={20} />, label: "Age" },
-  { icon: <Smile size={20} />, label: "Personality" },
-  { icon: <Heart size={20} />, label: "Mood" },
-  { icon: <Home size={20} />, label: "Adopted" },
-  { icon: <CalendarCheck size={20} />, label: "Adoption Date" },
-  { icon: <FileText size={20} />, label: "PDF" },
-  { icon: <MoreVertical size={20} />, label: "Action" },
-];
+const moodOptions = ["Happy", "Sad", "Excited"];
 
 const PetDetails = () => {
   const dispatch = useDispatch();
+  const moodFilterRef = useRef(null);
   const { petDetails, loading, error, message } = useSelector(
     (state) => state.petDetails
   );
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [moodFilterOpen, setMoodFilterOpen] = useState(false);
+  const [selectedMoods, setSelectedMoods] = useState([]);
+  console.log("selectedMoods", selectedMoods);
+
+  const headers = [
+    { icon: <ShieldCheck size={20} />, label: "ID" },
+    { icon: <User size={20} />, label: "Name" },
+    { icon: <Dog size={20} />, label: "Species" },
+    { icon: <CakeSlice size={20} />, label: "Age" },
+    { icon: <Smile size={20} />, label: "Personality" },
+    {
+      icon: <Heart size={20} />,
+      label: "Mood",
+      filter: (
+        <div className="relative">
+          <FunnelPlus
+            size={16}
+            className="text-gray-500 hover:text-main-color transition-all duration-300 cursor-pointer hover:scale-125"
+            onClick={() => setMoodFilterOpen((prev) => !prev)}
+          />
+          {moodFilterOpen && (
+            <div
+              ref={moodFilterRef}
+              className="absolute z-50 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg p-2"
+            >
+              {moodOptions.map((mood) => (
+                <label
+                  key={mood}
+                  className="flex items-center space-x-2 p-1 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedMoods.includes(mood)}
+                    onChange={() => {
+                      setSelectedMoods((prev) =>
+                        prev.includes(mood)
+                          ? prev.filter((m) => m !== mood)
+                          : [...prev, mood]
+                      );
+                    }}
+                  />
+                  <span>{mood}</span>
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      ),
+    },
+    { icon: <Home size={20} />, label: "Adopted" },
+    { icon: <CalendarCheck size={20} />, label: "Adoption Date" },
+    { icon: <FileText size={20} />, label: "PDF" },
+    { icon: <MoreVertical size={20} />, label: "Action" },
+  ];
 
   const adopter = {
     name: "Vairamuththu Vithushan",
@@ -64,22 +111,37 @@ const PetDetails = () => {
   };
 
   useEffect(() => {
-    dispatch(GetAllPets());
-  }, [dispatch]);
+    const handleClickOutside = (event) => {
+      if (
+        moodFilterRef.current &&
+        !moodFilterRef.current.contains(event.target)
+      ) {
+        setMoodFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(FilterPetsByMood(selectedMoods));
+  }, [selectedMoods]);
 
   const handleProfileSubmit = async (values) => {
     if (editData) {
-      console.log("Updated profile:", values);
       try {
         await dispatch(UpdatePetsById(values));
-        dispatch(GetAllPets());
+        dispatch(FilterPetsByMood(selectedMoods));
       } catch (error) {
         console.error("Error updating pets:", error);
       }
     } else {
       try {
         await dispatch(AddPets(values));
-        dispatch(GetAllPets());
+        dispatch(FilterPetsByMood(selectedMoods));
       } catch (error) {
         console.error("Error creating pets:", error);
       }
@@ -100,7 +162,7 @@ const PetDetails = () => {
   const handleDeleteClick = async (pet) => {
     try {
       await dispatch(DeletePetsById(pet._id));
-      await dispatch(GetAllPets());
+      dispatch(FilterPetsByMood(selectedMoods));
     } catch (error) {
       console.error("Failed to delete pet:", error);
     }
@@ -127,14 +189,14 @@ const PetDetails = () => {
 
       {/* table */}
       <div className="overflow-x-auto rounded-lg shadow-sm border border-borderGray300 ">
-        <table className="min-w-full ">
+        <table className="min-w-full min-h-[200px]">
           <thead>
             <tr className="text-left text-black-text bg-gradient-to-r from-orange-100 to-pink-100">
               {headers.map((h, i) => (
                 <th key={i} className="py-3 font-normal">
                   <div className="flex items-center gap-2 font-semibold text-nowrap">
-                    {/* {h.icon} */}
                     {h.label}
+                    {h.filter}
                   </div>
                 </th>
               ))}
@@ -171,7 +233,7 @@ const PetDetails = () => {
                     }`}
                   >
                     {pet.adopted === true ? (
-                      <CheckCircle className="w-4 h-4 animate-bounce" />
+                      <BadgeCheck className="w-4 h-4 animate-bounce" />
                     ) : (
                       <XCircle className="w-4 h-4 animate-pulse" />
                     )}

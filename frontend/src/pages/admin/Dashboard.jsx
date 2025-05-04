@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import {
   Calendar,
   ChartNoAxesColumn,
+  Frown,
+  HeartHandshake,
+  PawPrint,
   Plus,
+  Smile,
   UserCog,
   Users,
   UserX,
@@ -15,31 +19,35 @@ import PetDetails from "./PetDetails";
 const metricData = [
   {
     count: "08",
-    label: "Visitors Expected",
-    icon: <Users />,
+    label: "Total Adopted Pets",
+    icon: <HeartHandshake className="text-pink-500" />,
     supIcon: <Calendar />,
-    timeFrame: "Today",
+    timeFrame: "Total",
+    bgColor: "bg-green-200/50",
   },
   {
     count: "06",
-    label: "Completed Meetings",
-    icon: <Users />,
+    label: "Happy Pets",
+    icon: <Smile className="text-yellow-500" />,
     supIcon: <Calendar />,
-    timeFrame: "Today",
+    timeFrame: "Total",
+    bgColor: "bg-blue-200/50",
   },
   {
     count: "10",
-    label: "Defaulted Visitors",
-    icon: <UserX />,
+    label: "Sad Pets",
+    icon: <Frown className="text-blue-500" />,
     supIcon: <ChartNoAxesColumn />,
     timeFrame: "Total",
+    bgColor: "bg-orange-200/50",
   },
   {
     count: "10",
-    label: "Pending Visits",
-    icon: <UserCog />,
+    label: "Existing Pets",
+    icon: <PawPrint className="text-green-600" />,
     supIcon: <ChartNoAxesColumn />,
     timeFrame: "Total",
+    bgColor: "bg-red-200/50",
   },
 ];
 
@@ -62,6 +70,7 @@ const Dashboard = () => {
             icon={item.icon}
             subIcon={item.supIcon}
             timeFrame={item.timeFrame}
+            bgColor={item.bgColor}
           />
         ))}
       </div>
