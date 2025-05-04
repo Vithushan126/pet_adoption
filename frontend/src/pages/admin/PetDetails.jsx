@@ -140,7 +140,7 @@ const PetDetails = () => {
       </div>
 
       <div className="overflow-x-auto border border-borderGray300 rounded-lg shadow-sm">
-        <table className="min-w-full text-sm min-h-[200px]">
+        <table className="min-w-full text-sm min-h-[200px] max-h-screen overflow-y-auto">
           <thead className="bg-gradient-to-r from-orange-100 to-pink-100 text-left ">
             <tr>
               {headers.map((h, i) => (

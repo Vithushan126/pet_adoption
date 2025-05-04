@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { SignInUser } from "../../../Redux/Features/customerSlice.js";
+// import { SignInUser } from "../../../Redux/Features/customerSlice.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
 
 const SignInForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated, user, message } = useSelector(
-    (state) => state.customer
-  );
-  console.log("err", error);
+  //   const { loading, error, isAuthenticated, user, message } = useSelector(
+  //     (state) => state.customer
+  //   );
+  //   console.log("err", error);
 
-  const role = user?.data?.userData?.role;
-  const id = user?.data?.userData?._id;
+  //   const role = user?.data?.userData?.role;
+  //   const id = user?.data?.userData?._id;
 
-  useEffect(() => {
-    if (isAuthenticated && role == 1) {
-      navigate(`/admin/${id}`);
-      toast.success(message);
-    }
-  }, [isAuthenticated]);
+  //   useEffect(() => {
+  //     if (isAuthenticated && role == 1) {
+  //       navigate(`/admin/${id}`);
+  //       toast.success(message);
+  //     }
+  //   }, [isAuthenticated]);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -45,10 +45,10 @@ const SignInForm = () => {
       initialValues={{ email: "", password: "" }}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm }) => {
-        dispatch(SignInUser(values));
-        if (!isAuthenticated || role !== 1) {
-          toast.error(error);
-        }
+        // dispatch(SignInUser(values));
+        // if (!isAuthenticated || role !== 1) {
+        //   toast.error(error);
+        // }
         resetForm();
       }}
     >
@@ -63,7 +63,10 @@ const SignInForm = () => {
             </p>
           </div>
           <div className="mt-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
               Email
             </label>
             <Field
@@ -81,7 +84,10 @@ const SignInForm = () => {
             />
           </div>
           <div className="mt-4 relative">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
               Password
             </label>
             <Field
@@ -95,12 +101,9 @@ const SignInForm = () => {
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 pt-5 flex items-center"
+              className="absolute inset-y-0 right-0 pr-3 pt-5 flex items-center text-gray-500"
             >
-              <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
-                className="text-gray-500"
-              />
+              {showPassword ? <EyeOff /> : <Eye />}
             </button>
             <ErrorMessage
               name="password"
@@ -145,6 +148,7 @@ const SignInForm = () => {
             >
               <div className="flex items-center px-4">
                 <svg className="h-6 w-6 mr-2" viewBox="0 0 40 40">
+                  <title id="svg-title">Pet Adoption Icon</title>
                   <path
                     d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
                     fill="#FFC107"
@@ -168,15 +172,18 @@ const SignInForm = () => {
               </div>
             </a>
           </div>
-          {/* <div
+          <div
             className="mt-4 text-center hover:cursor-pointer"
-            onClick={() => navigate("/signup")}
+            // onClick={() => navigate("/signup")}
           >
-            <a className="text-xs text-gray-500 capitalize hover:text-gray-900">
+            <a
+              href="/signup"
+              className="text-xs text-gray-500 capitalize hover:text-gray-900"
+            >
               Don&apos;t have an account?{" "}
               <span className="text-gray-700 font-bold">Sign up here</span>
             </a>
-          </div> */}
+          </div>
         </Form>
       )}
     </Formik>
