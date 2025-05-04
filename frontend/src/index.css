@@ -3,9 +3,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-textGray: #637381;
-  --color-text-gray: #828282;
+  --color-main-color: #d61c62;
+  --color-text-color: #222;
+  --color-button-color: #018ae0;
+  --color-hover-color: #6610f2;
   --color-black-text: #4f4f4f;
+
+
+  --color-text-gray: #828282;
   --color-orange: #ff5a2f;
   --color-orange-dark: #e04e29;
   --color-borderGray300: #f0f0f0;

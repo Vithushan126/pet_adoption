@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/index";
-import LoadingScreen from "./components/loading";
 import ErrorBoundary from "./components/error-boundry";
+import LoadingScreen from "./components/loading/LoadingScreen";
+import { router } from "./routes";
 
 const App = () => {
   return (

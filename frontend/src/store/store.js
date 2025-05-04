@@ -3,7 +3,7 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 
-import petDetailsSlice from "../redux/feature/petDetailsSlice";
+import petDetailsSlice from "../redux/features/petDetailsSlice";
 
 // Persist configuration
 const persistConfig = {

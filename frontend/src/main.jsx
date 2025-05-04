@@ -7,6 +7,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./store/store.js";
 import "./index.css";
 import App from "./App.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import "react-date-range/dist/styles.css";
 // import "react-date-range/dist/theme/default.css";
 // import "rc-slider/assets/index.css";
@@ -17,6 +19,7 @@ createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <App />
+        <ToastContainer />
       </PersistGate>
     </Provider>
     {/* </I18nextProvider> */}

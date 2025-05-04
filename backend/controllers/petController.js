@@ -46,7 +46,11 @@ exports.updatePet = async (req, res) => {
   try {
     const updatedPet = await petService.updatePetById(req.params.id, req.body);
     if (!updatedPet) return res.status(404).json({ message: "Pet not found" });
-    res.status(200).json({ success: true, data: updatedPet });
+    res.status(200).json({
+      success: true,
+      message: "Pet updted successfully.",
+      data: updatedPet,
+    });
   } catch (error) {
     const status = error.message === "Invalid ID" ? 400 : 500;
     res.status(status).json({ success: false, message: error.message });
